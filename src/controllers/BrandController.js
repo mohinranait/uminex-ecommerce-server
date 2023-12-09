@@ -51,6 +51,7 @@ const getSingleBrand = async (req, res) => {
                 success: false,
             })
         }
+        
         res.send({
             success: true,
             brand

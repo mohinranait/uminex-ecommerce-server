@@ -8,9 +8,12 @@ const createJwt = async (req, res) => {
         // console.log('body', body);
         const token = jwt.sign(body, jwtSecret, {expiresIn:'1h'});
         res.cookie('token', token , {
-            httpOnly : true,
-            secure: productionMode === 'production',
-            sameSite: productionMode === 'production' ? 'none' : 'strict'
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            // httpOnly : true,
+            // secure: productionMode === 'production',
+            // sameSite: productionMode === 'production' ? 'none' : 'strict'
         }).send({
             success : true,
         })

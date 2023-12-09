@@ -27,7 +27,12 @@ const createNewSlider = async (req, res) => {
 // get all banner slider
 const getAllBannerSliders = async (req, res) => {
     try {
-        const banners = await BannerSlider.find({}); 
+        const requestSlider = req.query?.request;
+        let filter = {};
+        if(requestSlider === 'user'){
+            filter = {status:true}
+        }
+        const banners = await BannerSlider.find(filter); 
         res.status(200).send({
             success : true,
             banners,

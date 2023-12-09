@@ -24,12 +24,17 @@ const getSignleUserByEmail = async (req, res) => {
         // console.log(req.params);
         const email = req.params?.email;
         const tokenEmaill = req.user?.email;
-        if(email !== tokenEmaill){
-            return res.status(403).send({
-                success: false,
-                message : "forbidden access",
-            })
+        const accessRequest = req.query?.request; // [admin,user]
+
+        if(accessRequest !== 'admin'){
+            if(email !== tokenEmaill ){
+                return res.status(403).send({
+                    success: false,
+                    message : "forbidden access",
+                })
+            }
         }
+       
         const user = await User.findOne({email});
         if(!user){
             return res.status(404).send({
@@ -59,12 +64,8 @@ const getSignleUserByEmail = async (req, res) => {
 // Get all user by 
 const getAllUsers = async (req, res) => {
     try {
-        const email = req.query?.email;
-        const tokenEmail = req.user?.email;
         const isAdmin = req.admin // Boolean value
-        // console.log(email);
-        // console.log(tokenEmail);
-        if(email !== tokenEmail || isAdmin === false ){
+        if( isAdmin === false ){
             return res.status(403).send({
                 success: false,
                 message: "forbidden access",
@@ -90,11 +91,15 @@ const updateUserByEmail = async (req, res) => {
     try {
         const email = req.params?.email;
         const tokenEmaill = req.user?.email;
-        if(email !== tokenEmaill){
-            return res.status(403).send({
-                success: false,
-                message : "forbidden access",
-            })
+        const accessRequest = req.query?.request; // [admin,user]
+
+        if(accessRequest !== 'admin'){
+            if(email !== tokenEmaill ){
+                return res.status(403).send({
+                    success: false,
+                    message : "forbidden access",
+                })
+            }
         }
 
         const userUpdateData = req.body;

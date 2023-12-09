@@ -23,6 +23,13 @@ const userSchema = new Schema({
     mobile : {
         type : String,
     },
+    avater : {
+        type : String,
+    },
+    profile : {
+        type : String,
+        default : 'active' // [ active , block, pending]
+    },
 },{timestamps:true});
 
 

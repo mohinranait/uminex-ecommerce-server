@@ -27,7 +27,19 @@ const createNewCategory = async (req, res) => {
 // Get all caegorys
 const getAllCategorys = async (req, res) => {
     try {
-        const categorys = await Category.find({});
+        const {status, search} = req.query;
+        let query = {};
+        if(search){
+            query.name = new RegExp(".*"+search+".*", 'i');
+        }
+        if(status){
+            query.status = status === 'true' ? true : false ;
+        }
+     
+
+        const categorys = await Category.find(query);
+        // console.log(categorys);
+        console.log(query);
         res.send({
             success: true,
             categorys
