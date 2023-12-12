@@ -39,7 +39,7 @@ const getAllCategorys = async (req, res) => {
 
         const categorys = await Category.find(query);
         // console.log(categorys);
-        console.log(query);
+        // console.log(query);
         res.send({
             success: true,
             categorys

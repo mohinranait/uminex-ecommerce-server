@@ -18,7 +18,6 @@ module.exports = isAuth = async (req, res, next) => {
                 message : err.message,
             })
         }
-
         req.user = decoded
         next();
     })

@@ -21,7 +21,7 @@ const createNewUser = async (req, res) => {
 // Get signle user by email
 const getSignleUserByEmail = async (req, res) => {
     try {
-        // console.log(req.params);
+       
         const email = req.params?.email;
         const tokenEmaill = req.user?.email;
         const accessRequest = req.query?.request; // [admin,user]

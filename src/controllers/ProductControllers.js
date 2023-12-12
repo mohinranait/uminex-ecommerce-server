@@ -4,6 +4,7 @@ const Product = require("../models/ProductModel");
 // Get all products
 const getAllProducts = async (req, res) => {
     try {
+        
         const search = req.query?.search || '';
         const limit = Number(req.query?.limit) || 5;
         const page = Number(req.query?.page) || 1;
