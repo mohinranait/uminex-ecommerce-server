@@ -12,6 +12,8 @@ const categoryRoutes = require('./src/routes/categoryRoutes');
 const brandRouter = require('./src/routes/brandRoutes');
 const productRoute = require('./src/routes/productRoutes');
 const shoppingCartRouter = require('./src/routes/shoppingCartRoutes');
+const colorRoutes = require('./src/routes/colorRoutes');
+const checkoutRoute = require('./src/routes/checkoutRoutes');
 
 // Connect database
 connectMongoDb()
@@ -36,6 +38,8 @@ app.use("/api/v1", categoryRoutes)
 app.use("/api/v1", brandRouter)
 app.use("/api/v1", productRoute)
 app.use("/api/v1", shoppingCartRouter)
+app.use("/api/v1", colorRoutes);
+app.use("/api/v1", checkoutRoute);
 
 
 app.get('/', (req, res, next) => {

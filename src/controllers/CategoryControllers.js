@@ -69,6 +69,23 @@ const getSingleCategory = async (req, res) => {
     }
 }
 
+// Get single caegory by slug
+const getSingleCategoryBySlug = async (req, res) => {
+    try {
+        const slug = req.params?.slug;
+        const category = await Category.findOne({slug});
+        res.send({
+            success: true,
+            category
+        })
+    } catch (error) {
+        res.status(500).send({
+            message : error.message,
+            success: false,
+        })
+    }
+}
+
 // update single caegory by id
 const updateSingleCategory = async (req, res) => {
     try { 
@@ -145,5 +162,6 @@ module.exports = {
     getSingleCategory,
     createNewCategory,
     updateSingleCategory,
-    deleteSingleCategory
+    deleteSingleCategory,
+    getSingleCategoryBySlug
 }

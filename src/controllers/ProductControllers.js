@@ -1,5 +1,7 @@
 const Product = require("../models/ProductModel");
-
+const Category = require("../models/CategoryModel");
+const Brand = require("../models/BrandModel");
+const Color = require("../models/ColorModel");
 
 // Get all products
 const getAllProducts = async (req, res) => {
@@ -216,6 +218,47 @@ const checkSlugForUnique = async (req, res) => {
 }
 
 
+// Category wish product 
+const getCategoryWishProduct = async (req, res) => {
+    try {
+
+        // Ex: URL : server.com/api/filter-product/categorySlug/?brand=brandslug&color=colorSlug
+        const categorySlug = req.params?.slug;
+        const { brand: brandSlug, color: colorSlug } = req.query;
+
+        // Find the category based on the provided category slug
+        const category = await Category.findOne({ slug: categorySlug });
+
+        if (!category) {
+            return res.status(404).json({ error: 'Category not found' });
+        }
+
+        // Find the brand based on the provided brand slug
+        const brand = brandSlug ? await Brand.findOne({ slug: brandSlug }) : null;
+
+        // Find the color based on the provided color slug
+        // const color = colorSlug ? await Color.findOne({ slug: colorSlug }) : null;
+
+        // Construct the query object
+        const query = {
+            category: category._id,
+            ...(brand && { brand: brand._id }),
+            // ...(color && { color: color._id }),
+        };
+
+        // Find products based on the constructed query
+        const products = await Product.find(query);
+
+
+        res.send({
+            products
+        })
+    } catch (error) {
+        
+    }
+}
+
+
 
 module.exports = {
     getAllProducts,
@@ -224,5 +267,6 @@ module.exports = {
     updateProductById,
     deleteProductById,
     getSingleProductBySlug,
-    checkSlugForUnique
+    checkSlugForUnique,
+    getCategoryWishProduct
 }

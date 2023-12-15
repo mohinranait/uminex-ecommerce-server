@@ -9,11 +9,11 @@ const cartSchema = new Schema({
         type : Types.ObjectId,
         ref: "User"
     },
-    quantity: {
+    quantity : {
         type: Number,
         default:1
     },
-    varient: [
+    varient : [
         {
             label : String,
         }

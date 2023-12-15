@@ -1,4 +1,4 @@
-const { createNewProducts, getAllProducts, getSingleProductById, updateProductById, deleteProductById, getSingleProductBySlug, checkSlugForUnique } = require("../controllers/ProductControllers");
+const { createNewProducts, getAllProducts, getSingleProductById, updateProductById, deleteProductById, getSingleProductBySlug, checkSlugForUnique, getCategoryWishProduct } = require("../controllers/ProductControllers");
 const isAdmin = require("../middleware/isAdmin");
 const isAuth = require("../middleware/isAuth");
 
@@ -13,6 +13,8 @@ productRoute.patch('/products/:id', isAuth, isAdmin, updateProductById);
 productRoute.delete('/products/:id', isAuth, isAdmin, deleteProductById);
 productRoute.get('/uniquer-slug/:slug', isAuth, isAdmin, checkSlugForUnique);
 
+
+productRoute.get('/category-wish-product/:slug', getCategoryWishProduct);
 
 
 module.exports = productRoute;

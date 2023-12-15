@@ -27,9 +27,16 @@ const getUserWishAllCarts = async (req, res) => {
         const id = req.query?.user_id;
         // console.log("Cart user ID ",id);
         const carts = await ShoppingCart.find({user:id}).populate("user").populate( {path:"product", populate: {path:'category', model:"Category"} } );
+        const totalCarts = await ShoppingCart.find({user:id}).populate("user").countDocuments();
+        const totalPrice = carts.reduce((total, current) => {
+            return total + (current?.product?.price?.sellingPrice * current?.quantity)
+        },0);
+        console.log(totalPrice);
         res.send({
             success: true,
-            carts,
+            items:carts,
+            totalPrice, 
+            totalCarts
         })
     } catch (error) {
         res.status(500).send({
@@ -75,8 +82,46 @@ const removeShoppingCarts = async (req, res) => {
 }
 
 
+// Update Shopping carts by ID
+const udpateShoppingCarts = async (req, res) => {
+    try {
+        const tokenEmaill = req.user?.email;
+        const email = req.query?.email;
+        if( email !== tokenEmaill ){
+            return res.status(403).send({
+                success : false,
+                message : "forbidden access"
+            })
+        }
+        const id = req.params?.id;
+        const body = req.body;
+        const cart = await ShoppingCart.findByIdAndUpdate(id, body, {
+            new : true,
+            runValidators : true,
+        })
+        if(!cart){
+            return res.status(404).send({
+                success : false,
+                message : "Notfound"
+            })
+        }
+
+        res.send({
+            success: true,
+            message: "Updated",
+        })
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message : error.message
+        })
+    }
+}
+
+
 module.exports = {
     productStoreInShoppingCart,
     getUserWishAllCarts,
-    removeShoppingCarts
+    removeShoppingCarts,
+    udpateShoppingCarts
 }
