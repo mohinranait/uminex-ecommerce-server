@@ -11,9 +11,16 @@ const orderSchema = new Schema({
     paymentMethod : {
         type : String, // ["cod", 'mobile payment']
     },
+    paymentStatus : {
+        type : String,
+        default: 'unpaid' // ["unPaid", 'paid']
+    },
     orderStatus : {
         type : String,
         default : 'pending', // pending, proccessing, delivery, cancal
+    },
+    transactionID : {
+        type : String,
     },
     totalItems :{
         type: Number,
@@ -29,10 +36,12 @@ const orderSchema = new Schema({
         {
             product : {type: Object },
             quantity: {type:Number},
-            price: {type: Number},
+            price: {type: Number, default:0},
+            totalPrice: {type:Number,default:0},
             varient : [
                 {
-                    label : String,
+                    label: String,
+                    value: String,
                 }
             ]
         }

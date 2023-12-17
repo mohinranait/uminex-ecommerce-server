@@ -16,6 +16,7 @@ const cartSchema = new Schema({
     varient : [
         {
             label : String,
+            value : String,
         }
     ],
 },{timestamps:true})
