@@ -7,6 +7,7 @@ const createJwt = async (req, res) => {
         const body = req.body;
         // console.log('body', body);
         const token = jwt.sign(body, jwtSecret, {expiresIn:'1h'});
+        // console.log(token);
         res.cookie('token', token , {
             // Liveside code 
             httpOnly: true,

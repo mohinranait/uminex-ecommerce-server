@@ -1,3 +1,5 @@
+const ShoppingCart = require("../models/AddToCardModel");
+const Order = require("../models/OrdersModel");
 const User = require("../models/UserModel");
 
 
@@ -156,6 +158,21 @@ const deleteUserByEmail = async (req, res) => {
 }
 
 
+const userDashboardAnalitycs = async (req, res) => {
+    try {
+        const userId = req.query?.userId;
+   
+        const totalCarts = await ShoppingCart.find({user : userId}).countDocuments();
+        const totalOrders = await Order.find({userInfo:userId}).countDocuments();
+        res.send({
+            totalCarts,
+            totalOrders,
+        })
+    } catch (error) {
+        
+    }
+}
+
 
 module.exports = {
     createNewUser,
@@ -163,4 +180,5 @@ module.exports = {
     getAllUsers,
     updateUserByEmail,
     deleteUserByEmail,
+    userDashboardAnalitycs
 }

@@ -4,7 +4,27 @@ const getAllOrders = async (req, res) => {
     try {
         const tokenEmail = req.user?.email;
         const email = req.query?.email;
+        const userId = req.query?.userId;
         const request = req?.query?.request;
+
+        if(request === 'user'){
+            if(tokenEmail !== email){
+                return res.status(401).send({
+                    success: false,
+                    message:'forbidden access',
+                })
+            }
+
+            const filter = {
+                userInfo: userId
+            }
+
+            const orders = await Order.find(filter).populate("userInfo");
+            return  res.send({
+                success: true,
+                orders
+            })
+        }
 
         const orders = await Order.find({}).populate("userInfo");
         res.send({

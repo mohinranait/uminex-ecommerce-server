@@ -17,9 +17,9 @@ const orderSchema = new Schema({
     },
     orderStatus : {
         type : String,
-        default : 'pending', // pending, proccessing, delivery, cancal
+        default : 'pending', // pending, proccessing, delivery, cancel
     },
-    transactionID : {
+    transactionId : {
         type : String,
     },
     totalItems :{

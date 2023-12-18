@@ -8,6 +8,7 @@ const developmentDbUri = process.env.DATABASE_LOCAL;
 const serverPort  = process.env.SERVER_PORT;
 const jwtSecret = process.env.JWT_SECRET;
 const productionMode = process.env.NODE_ENV;
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY
 
 module.exports = {
     databaseUserName,
@@ -17,5 +18,6 @@ module.exports = {
     developmentDbUri,
     serverPort,
     jwtSecret,
-    productionMode
+    productionMode,
+    stripeSecretKey
 }
