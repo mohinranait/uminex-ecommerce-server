@@ -1,6 +1,7 @@
 const ShoppingCart = require("../models/AddToCardModel");
 const Order = require("../models/OrdersModel");
 const User = require("../models/UserModel");
+const Wishlist = require("../models/WishlistModal");
 
 
 const createNewUser = async (req, res) => {
@@ -164,12 +165,17 @@ const userDashboardAnalitycs = async (req, res) => {
    
         const totalCarts = await ShoppingCart.find({user : userId}).countDocuments();
         const totalOrders = await Order.find({userInfo:userId}).countDocuments();
+        const wishlists = await Wishlist.find({userInfo:userId}).countDocuments();
         res.send({
             totalCarts,
             totalOrders,
+            wishlists
         })
     } catch (error) {
-        
+        res.status(500).send({
+            success:false,
+            message: error.message
+        })
     }
 }
 

@@ -72,7 +72,7 @@ const getSingleProductBySlug = async (req, res) => {
     try {
         const slug = req.params?.slug;
         const product = await Product.findOne({slug}).populate('brand').populate('category').populate('author')
-        console.log(product);
+        // console.log(product);
         if(!product){
             return res.status(404).send({
                 success: false,
@@ -250,10 +250,10 @@ const getCategoryWishProduct = async (req, res) => {
         if(color){
             query['colors.slug']  = color?.slug
         }
-        console.log(query);
+        // console.log(query);
         // Find products based on the constructed query
         const products = await Product.find(query);
-        console.log(products);
+        // console.log(products);
 
         res.send({
             products
