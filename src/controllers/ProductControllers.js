@@ -237,26 +237,67 @@ const getCategoryWishProduct = async (req, res) => {
         const brand = brandSlug ? await Brand.findOne({ slug: brandSlug }) : null;
 
         // Find the color based on the provided color slug
-        // const color = colorSlug ? await Color.findOne({ slug: colorSlug }) : null;
-
+        const color = colorSlug ? await Color.findOne({ slug: colorSlug }) : null;
+        // console.log(color);
+        // console.log('Color slug', color?.slug , 'color query', colorSlug);
         // Construct the query object
         const query = {
             category: category._id,
-            ...(brand && { brand: brand._id }),
-            // ...(color && { color: color._id }),
         };
-
+        if(brand){
+            query.brand = brand?._id;
+        }
+        if(color){
+            query['colors.slug']  = color?.slug
+        }
+        console.log(query);
         // Find products based on the constructed query
         const products = await Product.find(query);
-
+        console.log(products);
 
         res.send({
             products
         })
     } catch (error) {
-        
+        res.status(500).send({
+            success: false,
+            message : error.message
+        })
     }
 }
+
+// const product = [
+//     {
+//         _id : 1,
+//         name : "product name",
+//         brand: "brand",
+//         colors : [
+//             {
+//                 name: 'red',
+//                 value: '123'
+//             },
+//             {
+//                 name: 'blue',
+//                 value: '234'
+//             },
+//         ]
+//     },
+//     {
+//         _id : 2,
+//         name : "product tow",
+//         brand: "brands",
+//         colors : [
+//             {
+//                 name: 'white',
+//                 value: '123'
+//             },
+//             {
+//                 name: 'red',
+//                 value: '234'
+//             },
+//         ]
+//     },
+// ]
 
 
 

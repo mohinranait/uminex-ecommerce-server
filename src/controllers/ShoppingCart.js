@@ -6,6 +6,19 @@ const productStoreInShoppingCart = async (req, res) => {
     try {
         const body = req.body;
         // console.log('Cart Store ',body);
+        const isExists = await ShoppingCart.findOne({product: body?.product});
+        if(isExists){
+            await ShoppingCart.findByIdAndUpdate(isExists?._id ,{
+                quantity : isExists.quantity + 1,
+            }, {
+                new : true, 
+                runValidators: true,
+            });
+            return res.send({
+                success : true,
+                message : "Shopping cart added",
+            })
+        }
         const result = await ShoppingCart.create(body);
         // console.log(result);
         res.send({

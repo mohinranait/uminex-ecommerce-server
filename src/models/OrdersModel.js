@@ -6,7 +6,8 @@ const orderSchema = new Schema({
         ref: "User"
     },
     deliveryAddress : {
-        type: String,
+        type  : Types.ObjectId,
+        ref: "Address"
     },
     paymentMethod : {
         type : String, // ["cod", 'mobile payment']

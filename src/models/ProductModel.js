@@ -17,12 +17,25 @@ const productSchema = new Schema({
         {
             label: {type:String},
             value: {type:String},
+            slug: {type:String},
         }
+        
     ],
     details: { type : String},
     isStock: { 
         type: Number,
         default: 10,
+    },
+    isFeature : {
+        type : String,
+    },
+    delivery: {
+        deliveryCharge : {
+            type: Number,
+        },
+        deliveryStatus : {
+            type: String, // Free, pay
+        }
     },
     minStock: { 
         type: Number,

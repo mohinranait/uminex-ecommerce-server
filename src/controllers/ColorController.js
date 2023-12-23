@@ -4,8 +4,8 @@ const Color = require("../models/ColorModel");
 const createColor = async (req, res) => {
     try {
         const isAdmin = req.admin;
-        if(isAdmin !== 'admin'){
-            res.status(401).send({
+        if(isAdmin === false ){
+            return res.status(401).send({
                 message : "unauthorize access",
                 success: false,
             })
@@ -67,8 +67,8 @@ const getSingleColorBySlug = async (req, res) => {
 // get all colors by ID
 const getSingleColorById = async (req, res) => {
     try {
-        const id = req.query?.id
-        const color = await Color.findOne(id);
+        const id = req.params?.id
+        const color = await Color.findById(id);
         if(!color){
             return res.status(404).send({
                 message: "Notfound",
@@ -88,9 +88,45 @@ const getSingleColorById = async (req, res) => {
 }
 
 
+const updateColorById = async (req, res) => {
+    try {
+        const isAdmin = req.admin;
+        if(isAdmin === false ){
+            return res.status(401).send({
+                message : "unauthorize access",
+                success: false,
+            })
+        }
+        const id = req.params?.id;
+        const body  = req.body;
+        const color = await Color.findByIdAndUpdate(id, body , {
+            new : true,
+            runValidators:true,
+        });
+
+        if(!color){
+            return res.status(404).send({
+                message: "Notfound",
+                success: false
+            })
+        }
+
+        res.send({
+            success: true,
+        })
+    } catch (error) {
+        res.status(500).send({
+            message : error.message,
+            success: false,
+        })
+    }
+}
+
+
 module.exports = {
     createColor,
     getAllColors,
     getSingleColorBySlug,
     getSingleColorById,
+    updateColorById
 }
