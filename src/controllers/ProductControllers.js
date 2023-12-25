@@ -224,7 +224,7 @@ const getCategoryWishProduct = async (req, res) => {
 
         // Ex: URL : server.com/api/filter-product/categorySlug/?brand=brandslug&color=colorSlug
         const categorySlug = req.params?.slug;
-        const { brand: brandSlug, color: colorSlug } = req.query;
+        const { brand: brandSlug, color: colorSlug, delivery } = req.query;
 
         // Find the category based on the provided category slug
         const category = await Category.findOne({ slug: categorySlug });
@@ -238,9 +238,7 @@ const getCategoryWishProduct = async (req, res) => {
 
         // Find the color based on the provided color slug
         const color = colorSlug ? await Color.findOne({ slug: colorSlug }) : null;
-        // console.log(color);
-        // console.log('Color slug', color?.slug , 'color query', colorSlug);
-        // Construct the query object
+
         const query = {
             category: category._id,
         };
@@ -250,10 +248,13 @@ const getCategoryWishProduct = async (req, res) => {
         if(color){
             query['colors.slug']  = color?.slug
         }
-        // console.log(query);
+
+        if(delivery ==='free'){
+            query['delivery.deliveryStatus']  = delivery
+        }
+
         // Find products based on the constructed query
         const products = await Product.find(query);
-        // console.log(products);
 
         res.send({
             products

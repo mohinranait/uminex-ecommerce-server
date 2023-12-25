@@ -69,8 +69,8 @@ const getAllWishlistForUser = async (req, res) => {
 // update wishlist by Id
 const deleteWishlistById = async (req, res) => {
     try {
-        const id = req.params?.id;
-        const email = req.query?.email;
+
+        const {product_id,email,user_id} = req.query;
         const tokenEmail = req.user?.email;
         if(tokenEmail !== email){
             return res.status(401).send({
@@ -78,14 +78,20 @@ const deleteWishlistById = async (req, res) => {
                 success: false,
             })
         }
+
+        const query = {
+            userInfo : user_id,
+            product : product_id
+        }
         
-        const wishlist = await Wishlist.findByIdAndDelete(id);
+        const wishlist = await Wishlist.findOne(query);
         if(!wishlist){
             return res.status(404).send({
                 message : "Notfound",
                 success: false,
             })
         }
+        await Wishlist.findByIdAndDelete(wishlist?._id)
         res.send({
             success: true,
         })
