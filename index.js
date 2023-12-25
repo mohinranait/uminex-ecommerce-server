@@ -17,6 +17,7 @@ const checkoutRoute = require('./src/routes/checkoutRoutes');
 const orderRoutes = require('./src/routes/ordersRoutes');
 const addressRouter = require('./src/routes/addressRoutes');
 const wishlistRouter = require('./src/routes/wishlistsRoutes');
+const reviewRouter = require('./src/routes/productReviewRoutes');
 // Connect database
 connectMongoDb()
 
@@ -45,6 +46,7 @@ app.use("/api/v1", checkoutRoute);
 app.use("/api/v1", orderRoutes);
 app.use("/api/v1", addressRouter);
 app.use("/api/v1", wishlistRouter);
+app.use("/api/v1", reviewRouter);
 
 
 

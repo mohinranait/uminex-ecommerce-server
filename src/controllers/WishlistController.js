@@ -19,7 +19,6 @@ const createNewWishlist = async (req, res) => {
             userInfo : body?.userInfo,
             product : body?.product,
         }
-        console.log('query',query);
         const isExists = await Wishlist.findOne(query);
         console.log(isExists);
         if(isExists){
