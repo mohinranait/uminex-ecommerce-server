@@ -36,14 +36,15 @@ const stripePaymentAndOrder =  async (req, res) => {
         const session_id = req.query?.session_id;
         const session = await stripe.checkout.sessions.retrieve(session_id);
         const body = req.body;
-  
+
         if(session.payment_status === 'paid'){
-          
             try {
                 const transactionId = session?.payment_intent;
                 const isExists =  await Order.findOne({transactionId});
+
                 console.log("is Exists Order : ",transactionId,isExists);
                 if(!isExists){
+                    
                     await Order.create({...body,transactionId });
                     const query = {
                         _id: {
@@ -54,7 +55,7 @@ const stripePaymentAndOrder =  async (req, res) => {
                     await ShoppingCart.deleteMany(query);
                 }
              
-                res.send({
+                return res.send({
                     message: "successed",
                 })
             } catch (error) {
@@ -62,6 +63,8 @@ const stripePaymentAndOrder =  async (req, res) => {
                     message: error.message,
                 })
             }
+        }else{
+            console.log("Unpaid");
         }
     } catch (error) {
         return res.status(500).send({
@@ -75,7 +78,6 @@ const stripePaymentAndOrder =  async (req, res) => {
 // Stripe payment intent
 const stripePaymentIntentCreate = async (req, res) => {
     try {
-
         const {shopHistory,domainName}  = req.body;
         const lineItems =  shopHistory?.map((product)=>({
             price_data:{

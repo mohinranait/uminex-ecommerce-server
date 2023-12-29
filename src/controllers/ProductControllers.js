@@ -222,16 +222,12 @@ const checkSlugForUnique = async (req, res) => {
 const getCategoryWishProduct = async (req, res) => {
     try {
 
-        // Ex: URL : server.com/api/filter-product/categorySlug/?brand=brandslug&color=colorSlug
+        
         const categorySlug = req.params?.slug;
         const { brand: brandSlug, color: colorSlug, delivery } = req.query;
 
         // Find the category based on the provided category slug
         const category = await Category.findOne({ slug: categorySlug });
-
-        if (!category) {
-            return res.status(404).json({ error: 'Category not found' });
-        }
 
         // Find the brand based on the provided brand slug
         const brand = brandSlug ? await Brand.findOne({ slug: brandSlug }) : null;
@@ -239,9 +235,26 @@ const getCategoryWishProduct = async (req, res) => {
         // Find the color based on the provided color slug
         const color = colorSlug ? await Color.findOne({ slug: colorSlug }) : null;
 
-        const query = {
-            category: category._id,
+        // Search by product name
+        const search = req.query?.search || '';
+        const searchRegExp = new RegExp(".*"+ search+".*", 'i');
+
+        let query = {
+            status : {$ne : 'pending'},
+            
         };
+        if( search !== 'null'  ){
+            query.$or = [
+                {name: {$regex : searchRegExp}},
+                {slug: {$regex : searchRegExp}},
+                {product_type: {$regex : searchRegExp}},
+                {skuCode: {$regex : searchRegExp}},
+            ]
+        }
+
+        if(category){
+            query.category = category?._id
+        }
         if(brand){
             query.brand = brand?._id;
         }
@@ -252,7 +265,8 @@ const getCategoryWishProduct = async (req, res) => {
         if(delivery ==='free'){
             query['delivery.deliveryStatus']  = delivery
         }
-
+        
+        
         // Find products based on the constructed query
         const products = await Product.find(query);
 
