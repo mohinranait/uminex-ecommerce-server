@@ -44,7 +44,7 @@ const getUserWishAllCarts = async (req, res) => {
         const totalPrice = carts.reduce((total, current) => {
             return total + (current?.product?.price?.sellingPrice * current?.quantity)
         },0);
-        console.log(totalPrice);
+        // console.log(totalPrice);
         res.send({
             success: true,
             items:carts,

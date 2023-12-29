@@ -20,7 +20,7 @@ const createNewWishlist = async (req, res) => {
             product : body?.product,
         }
         const isExists = await Wishlist.findOne(query);
-        console.log(isExists);
+        // console.log(isExists);
         if(isExists){
             return res.send({
                 success: 'isExists',

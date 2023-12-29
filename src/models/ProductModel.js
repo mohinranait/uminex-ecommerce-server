@@ -22,6 +22,8 @@ const productSchema = new Schema({
         
     ],
     details: { type : String},
+    rating: { type : Number},
+    reviews: { type : Number},
     isStock: { 
         type: Number,
         default: 10,

@@ -1,4 +1,4 @@
-const { createNewUser, getSignleUserByEmail, getAllUsers, updateUserByEmail, deleteUserByEmail, userDashboardAnalitycs } = require('../controllers/UserController');
+const { createNewUser, getSignleUserByEmail, getAllUsers, updateUserByEmail, deleteUserByEmail, userDashboardAnalitycs, getSignleUserById } = require('../controllers/UserController');
 const isAdmin = require('../middleware/isAdmin');
 const isAuth = require('../middleware/isAuth');
 
@@ -6,6 +6,7 @@ const userRouter = require('express').Router();
 
 userRouter.post('/users', createNewUser )
 userRouter.get('/user/:email', isAuth, getSignleUserByEmail )
+userRouter.get('/user-by-id/:id', isAuth, getSignleUserById );
 userRouter.get('/users', isAuth, isAdmin,  getAllUsers );
 userRouter.patch('/user/:email', isAuth, updateUserByEmail );
 userRouter.delete('/user/:email', isAuth,isAdmin, deleteUserByEmail );

@@ -63,6 +63,33 @@ const getSignleUserByEmail = async (req, res) => {
 }
 
 
+// Get signle user by ID
+const getSignleUserById = async (req, res) => {
+    try {
+       
+        const id = req.params?.id;
+      
+        const user = await User.findById(id);
+
+        if(!user){
+            return res.status(404).send({
+                success: false,
+                message : "User notfound",
+            })
+        }
+        res.send({
+            user,
+            success: true,
+        })
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message : error.message,
+        })
+    }
+}
+
+
 
 // Get all user by 
 const getAllUsers = async (req, res) => {
@@ -186,5 +213,6 @@ module.exports = {
     getAllUsers,
     updateUserByEmail,
     deleteUserByEmail,
-    userDashboardAnalitycs
+    userDashboardAnalitycs,
+    getSignleUserById
 }
