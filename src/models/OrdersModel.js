@@ -39,12 +39,9 @@ const orderSchema = new Schema({
             quantity: {type:Number},
             price: {type: Number, default:0},
             totalPrice: {type:Number,default:0},
-            varient : [
-                {
-                    label: String,
-                    value: String,
-                }
-            ]
+            varient : {
+                type : Array,
+            }
         }
     ]
 },{timestamps:true});

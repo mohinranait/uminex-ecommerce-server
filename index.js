@@ -18,8 +18,8 @@ const orderRoutes = require('./src/routes/ordersRoutes');
 const addressRouter = require('./src/routes/addressRoutes');
 const wishlistRouter = require('./src/routes/wishlistsRoutes');
 const reviewRouter = require('./src/routes/productReviewRoutes');
-const chatRouter = require('./src/routes/chatRoutes');
-const messageRouter = require('./src/routes/messageRoutes');
+// const chatRouter = require('./src/routes/chatRoutes');
+// const messageRouter = require('./src/routes/messageRoutes');
 
 
 // Connect database
@@ -51,8 +51,8 @@ app.use("/api/v1", orderRoutes);
 app.use("/api/v1", addressRouter);
 app.use("/api/v1", wishlistRouter);
 app.use("/api/v1", reviewRouter);
-app.use("/api/v1", chatRouter);
-app.use("/api/v1", messageRouter);
+// app.use("/api/v1", chatRouter);
+// app.use("/api/v1", messageRouter);
 
 
 

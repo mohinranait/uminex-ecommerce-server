@@ -19,7 +19,6 @@ const productSchema = new Schema({
             value: {type:String},
             slug: {type:String},
         }
-        
     ],
     details: { type : String},
     rating: { type : Number},
@@ -30,6 +29,7 @@ const productSchema = new Schema({
     },
     isFeature : {
         type : String,
+        default:'inActive'
     },
     delivery: {
         deliveryCharge : {
@@ -94,6 +94,18 @@ const productSchema = new Schema({
     status : {
         type: String,
         default: 'active', // [ active, pending]
+    },
+    productFeatures : {
+        keyFeatures : {
+            colors: Array,
+            memorys: Array
+        },
+        extraFeatures : [
+            {
+                label: {type:String},
+                value: {type:String},
+            }
+        ],
     }
 },{timestamps:true})
 

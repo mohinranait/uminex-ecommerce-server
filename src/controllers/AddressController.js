@@ -15,6 +15,7 @@ const createNewAddress = async (req, res) => {
 
         const body  = req.body;
         const address = await Address.create(body);
+        await User.findOneAndUpdate({email}, {address: address?._id})
         res.send({
             success: true
         })

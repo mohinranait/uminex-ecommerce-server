@@ -1,4 +1,4 @@
-const {model, Schema } = require("mongoose")
+const {model, Schema, Types } = require("mongoose")
 
 const userSchema = new Schema({
     userName : {
@@ -18,7 +18,8 @@ const userSchema = new Schema({
         default: "user"
     },
     address : {
-        type : String,
+        type : Types.ObjectId,
+        ref: "Address"
     },
     mobile : {
         type : String,

@@ -8,8 +8,17 @@ const getAllProducts = async (req, res) => {
     try {
         
         const search = req.query?.search || '';
-        const limit = Number(req.query?.limit) || 5;
+        const limit = Number(req.query?.limit) || 20;
         const page = Number(req.query?.page) || 1;
+        let sorting = req.query?.sort; // asc, desc
+        const sortFiled = req.query?.sortFiled;
+        const request = req.query?.request; // topSell, features, offers
+        // formate sorting order
+        if(sorting === 'asc'){
+            sorting = 1;
+        }else{
+            sorting = -1
+        }
 
         // Search product by name, slug
         const searchRegExp = new RegExp(".*"+search+".*", 'i');
@@ -22,7 +31,22 @@ const getAllProducts = async (req, res) => {
             ]
         }
 
-        const products = await Product.find(filter).populate('brand').populate('category').skip((page-1)*limit).limit(limit);
+        // features product
+        if(request){
+            if(request === 'isFeature'){
+                filter.isFeature = 'active'
+            }else if(request === 'Offers'){
+                filter['price.discountPrice'] = { $gt : 0}
+            }
+        }
+
+
+        const products = await Product.find(filter)
+        .populate('brand')
+        .populate('category')
+        .skip((page-1)*limit)
+        .limit(limit)
+        .sort({[sortFiled]: sorting });
         const counts = await Product.find(filter).countDocuments();
         res.status(200).send({
             success: true,
@@ -95,7 +119,7 @@ const getSingleProductBySlug = async (req, res) => {
 // Create new product
 const createNewProducts = async (req, res) => {
     try {
-        // console.log(req.body);
+        console.log(req.body);
         const isAdmin = req.admin;
         if(isAdmin === false){
             return res.status(403).send({
@@ -224,8 +248,8 @@ const getCategoryWishProduct = async (req, res) => {
 
         
         const categorySlug = req.params?.slug;
-        const { brand: brandSlug, color: colorSlug, delivery } = req.query;
-
+        const { brand: brandSlug, color: colorSlug, delivery,limit,page,sort,sortFiled,request } = req.query;
+        
         // Find the category based on the provided category slug
         const category = await Category.findOne({ slug: categorySlug });
 
@@ -268,10 +292,14 @@ const getCategoryWishProduct = async (req, res) => {
         
         
         // Find products based on the constructed query
-        const products = await Product.find(query);
-
+        const products = await Product.find(query)
+        .skip((page-1)*limit)
+        .sort({[sortFiled]: sort == 'asc' ? 1 : -1})
+        .limit(limit)
+        const totalProducts = await Product.find(query).countDocuments();
         res.send({
-            products
+            products,
+            totalProducts,
         })
     } catch (error) {
         res.status(500).send({
