@@ -38,7 +38,7 @@ const getSignleUserByEmail = async (req, res) => {
             }
         }
        
-        const user = await User.findOne({email});
+        const user = await User.findOne({email}).populate('address');
         if(!user){
             return res.status(404).send({
                 success: false,
@@ -68,8 +68,7 @@ const getSignleUserById = async (req, res) => {
     try {
        
         const id = req.params?.id;
-      
-        const user = await User.findById(id);
+        const user = await User.findById(id).populate("address");
 
         if(!user){
             return res.status(404).send({

@@ -245,10 +245,9 @@ const checkSlugForUnique = async (req, res) => {
 // Category wish product 
 const getCategoryWishProduct = async (req, res) => {
     try {
-
         
         const categorySlug = req.params?.slug;
-        const { brand: brandSlug, color: colorSlug, delivery,limit,page,sort,sortFiled,request } = req.query;
+        const { brand: brandSlug, color: colorSlug, delivery,limit,page,sort,sortFiled, offers } = req.query;
         
         // Find the category based on the provided category slug
         const category = await Category.findOne({ slug: categorySlug });
@@ -276,10 +275,16 @@ const getCategoryWishProduct = async (req, res) => {
             ]
         }
 
+        // offers product 
+        if(offers === 'true'){
+            query['price.discountPrice'] = { $gt : 0}
+        }
+
         if(category){
             query.category = category?._id
         }
         if(brand){
+            console.log(brand);
             query.brand = brand?._id;
         }
         if(color){
@@ -296,6 +301,8 @@ const getCategoryWishProduct = async (req, res) => {
         .skip((page-1)*limit)
         .sort({[sortFiled]: sort == 'asc' ? 1 : -1})
         .limit(limit)
+        .populate('category')
+
         const totalProducts = await Product.find(query).countDocuments();
         res.send({
             products,

@@ -24,6 +24,9 @@ const userSchema = new Schema({
     mobile : {
         type : String,
     },
+    company : {
+        type : String,
+    },
     avater : {
         type : String,
     },

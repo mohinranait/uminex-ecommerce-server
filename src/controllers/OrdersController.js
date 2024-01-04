@@ -39,6 +39,56 @@ const getAllOrders = async (req, res) => {
     }
 }
 
+// Get single orders
+const getSingleOrder = async (req, res) => {
+    try {
+        const tokenEmail = req.user?.email;
+        const email = req.query?.email;
+        const userId = req.query?.userId;
+        const request = req?.query?.request;
+        const orderId = req.params?.id;
+
+        if(request === 'user'){
+            if(tokenEmail !== email){
+                return res.status(401).send({
+                    success: false,
+                    message:'forbidden access',
+                })
+            }
+
+            let query = {
+                _id : orderId,
+            }
+
+            // const filter = {
+            //     userInfo: userId
+            // }
+
+            const order = await Order.findById(query).populate("userInfo");
+            if( order?.userInfo?._id != userId ){
+                return res.status(401).send({
+                    success: false,
+                    message:'forbidden access',
+                })
+            }
+            return  res.send({
+                success: true,
+                order
+            })
+        }
+
+        const order = await Order.findById({_id:orderId}).populate("userInfo");
+        res.send({
+            success: true,
+            order
+        })
+    } catch (error) {
+        return res.status(500).send({
+            message : error.message
+        })
+    }
+}
+
 
 
 // udpate orders by ID
@@ -146,6 +196,7 @@ const deleteOrdersById = async (req, res) => {
 
 module.exports = {
     getAllOrders,
+    getSingleOrder,
     updateOrdersById,
-    deleteOrdersById
+    deleteOrdersById,
 }
