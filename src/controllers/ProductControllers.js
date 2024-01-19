@@ -8,6 +8,8 @@ const getAllProducts = async (req, res) => {
     try {
         
         const search = req.query?.search || '';
+        const access = req.query?.access || ''; // user || admin
+        const status = req.query?.status || ''; // product status [active, pending] 
         const limit = Number(req.query?.limit) || 20;
         const page = Number(req.query?.page) || 1;
         let sorting = req.query?.sort; // asc, desc
@@ -22,15 +24,26 @@ const getAllProducts = async (req, res) => {
 
         // Search product by name, slug
         const searchRegExp = new RegExp(".*"+search+".*", 'i');
-        const filter = {
-            status : { $ne : false },
-            $or : [
-                // Multiple condition wish search product
-                {name: { $regex : searchRegExp}},
-                {slug: { $regex : searchRegExp}},
-            ]
+        const filter = {}
+
+        // Product Status 
+        if(access === 'user'){
+            filter.status = { $eq : 'active' }
+        }else{
+            if(status !== 'null'){
+                filter.status = { $eq : status }
+            }
         }
 
+        // Search 
+        if( search !== 'null'  ){
+            filter.$or = [
+                {name: {$regex : searchRegExp}},
+                {slug: {$regex : searchRegExp}},
+                {product_type: {$regex : searchRegExp}},
+                {skuCode: {$regex : searchRegExp}},
+            ]
+        }
         // features product
         if(request){
             if(request === 'isFeature'){
@@ -247,7 +260,7 @@ const getCategoryWishProduct = async (req, res) => {
     try {
         
         const categorySlug = req.params?.slug;
-        const { brand: brandSlug, color: colorSlug, delivery,limit,page,sort,sortFiled, offers } = req.query;
+        const { brand: brandSlug, color: colorSlug, delivery,limit,page,sort,sortFiled, offers,priceRange } = req.query;
         
         // Find the category based on the provided category slug
         const category = await Category.findOne({ slug: categorySlug });
@@ -264,7 +277,6 @@ const getCategoryWishProduct = async (req, res) => {
 
         let query = {
             status : {$ne : 'pending'},
-            
         };
         if( search !== 'null'  ){
             query.$or = [
@@ -279,12 +291,17 @@ const getCategoryWishProduct = async (req, res) => {
         if(offers === 'true'){
             query['price.discountPrice'] = { $gt : 0}
         }
-
+        // product price with filter
+        if(priceRange){
+            const [min,max]=priceRange.split('-');
+            const minPrice = Number(min)
+            const maxPrice = Number(max)
+            query['price.sellingPrice'] = { $gt : minPrice , $lt : maxPrice }
+        }
         if(category){
             query.category = category?._id
         }
         if(brand){
-            console.log(brand);
             query.brand = brand?._id;
         }
         if(color){

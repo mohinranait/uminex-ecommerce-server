@@ -6,6 +6,7 @@ const Wishlist = require("../models/WishlistModal");
 
 const createNewUser = async (req, res) => {
     try {
+        console.log(req.body);
         const user = req.body;
         const result = await User.create(user);
         res.status(200).send({

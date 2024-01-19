@@ -6,7 +6,11 @@ const productStoreInShoppingCart = async (req, res) => {
     try {
         const body = req.body;
         // console.log('Cart Store ',body);
-        const isExists = await ShoppingCart.findOne({product: body?.product});
+        const isExisQuery = {
+            product: body?.product,
+            user: body?.user,
+        }
+        const isExists = await ShoppingCart.findOne(isExisQuery);
         if(isExists){
             await ShoppingCart.findByIdAndUpdate(isExists?._id ,{
                 quantity : isExists.quantity + 1,
