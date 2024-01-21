@@ -53,6 +53,8 @@ const getAllProducts = async (req, res) => {
             }
         }
 
+      
+
 
         const products = await Product.find(filter)
         .populate('brand')
@@ -132,7 +134,7 @@ const getSingleProductBySlug = async (req, res) => {
 // Create new product
 const createNewProducts = async (req, res) => {
     try {
-        console.log(req.body);
+        // console.log(req.body);
         const isAdmin = req.admin;
         if(isAdmin === false){
             return res.status(403).send({

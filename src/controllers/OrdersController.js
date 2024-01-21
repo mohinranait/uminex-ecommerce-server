@@ -90,6 +90,23 @@ const getSingleOrder = async (req, res) => {
 }
 
 
+// update product methods
+const updateProductFindById = async (id, document) => {
+    try {
+        await Product.findByIdAndUpdate(
+            { _id: id},
+            document,
+            {
+                new: true,
+                runValidators: true
+            }
+        )
+    } catch (error) {
+        return error
+    }
+    
+}
+
 
 // udpate orders by ID
 const updateOrdersById = async (req, res) => {
@@ -105,41 +122,41 @@ const updateOrdersById = async (req, res) => {
                 quantity : item?.quantity
             }
         })
+
+
         if(orderStatus == 'shift'){
+            // delivery
             // When order shift. then Product quantity decrement 
             productsInfo?.forEach( async (product) => {
                 const findPoduct = await Product.findById({_id: product?.productId});
                 const updaeQuantity = findPoduct?.isStock - product?.quantity;
-                const isProduct = await Product.findByIdAndUpdate(
-                    {
-                        _id: product?.productId
-                    },
-                    {
-                        isStock: updaeQuantity  
-                    },
-                    {
-                        new: true,
-                        runValidators: true
-                    }
-                )
+                const updateProduct = {
+                    isStock: updaeQuantity,
+                }
+                // update product method
+                updateProductFindById(findPoduct?._id , updateProduct )
+               
             })
         }else if(orderStatus == 'return'){
             // When order return. then product quantity increment
             productsInfo?.forEach( async (product) => {
                 const findPoduct = await Product.findById({_id: product?.productId});
                 const updaeQuantity = findPoduct?.isStock + product?.quantity;
-                const isProduct = await Product.findByIdAndUpdate(
-                    {
-                        _id: product?.productId
-                    },
-                    {
-                        isStock: updaeQuantity  
-                    },
-                    {
-                        new: true,
-                        runValidators: true
-                    }
-                )
+                const updateProduct = {
+                    isStock: updaeQuantity  
+                }
+               // update product method
+               updateProductFindById(findPoduct?._id , updateProduct )
+            })
+        }else if( orderStatus == 'delivery' ){
+            productsInfo?.forEach( async (product) => {
+                const findPoduct = await Product.findById({_id: product?.productId});
+                const updateProduct = {
+                    sellQuantity:  findPoduct?.sellQuantity + product?.quantity
+                }
+                // update product method
+                updateProductFindById(findPoduct?._id , updateProduct )
+               
             })
         }
         const order = await Order.findByIdAndUpdate(id, req.body , {

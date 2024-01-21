@@ -77,6 +77,10 @@ const productSchema = new Schema({
     categoryType: { 
         type: String
     },
+    sellQuantity: {
+        type:Number,
+        default: 0
+    },
     slug: { 
         type: String, 
         lowercase:true,
