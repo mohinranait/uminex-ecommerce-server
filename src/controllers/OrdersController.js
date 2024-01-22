@@ -8,6 +8,9 @@ const getAllOrders = async (req, res) => {
         const userId = req.query?.userId;
         const request = req?.query?.request;
 
+        const sort = 'desc';
+        const sortFiled = 'createdAt';
+
         if(request === 'user'){
             if(tokenEmail !== email){
                 return res.status(401).send({
@@ -20,14 +23,19 @@ const getAllOrders = async (req, res) => {
                 userInfo: userId
             }
 
-            const orders = await Order.find(filter).populate("userInfo");
+            const orders = await Order.find(filter)
+            .populate("userInfo")
+            .sort({[sortFiled]: sort === 'asc' ? 1 : -1})
+
             return  res.send({
                 success: true,
                 orders
             })
         }
 
-        const orders = await Order.find({}).populate("userInfo");
+        const orders = await Order.find({})
+        .populate("userInfo").populate('deliveryAddress')
+        .sort({[sortFiled]: sort === 'asc' ? 1 : -1});
         res.send({
             success: true,
             orders
@@ -45,8 +53,9 @@ const getSingleOrder = async (req, res) => {
         const tokenEmail = req.user?.email;
         const email = req.query?.email;
         const userId = req.query?.userId;
-        const request = req?.query?.request;
+        const request = req?.query?.request || 'admin';
         const orderId = req.params?.id;
+
 
         if(request === 'user'){
             if(tokenEmail !== email){
@@ -64,7 +73,7 @@ const getSingleOrder = async (req, res) => {
             //     userInfo: userId
             // }
 
-            const order = await Order.findById(query).populate("userInfo");
+            const order = await Order.findById(query)
             if( order?.userInfo?._id != userId ){
                 return res.status(401).send({
                     success: false,
@@ -77,7 +86,7 @@ const getSingleOrder = async (req, res) => {
             })
         }
 
-        const order = await Order.findById({_id:orderId}).populate("userInfo");
+        const order = await Order.findById({_id:orderId}).populate("userInfo").populate('deliveryAddress');
         res.send({
             success: true,
             order
@@ -171,7 +180,8 @@ const updateOrdersById = async (req, res) => {
         }
         res.send({
             success: true,
-            message : "Updated"
+            message : "Updated",
+            order
         })
     } catch (error) {
         return res.status(500).send({

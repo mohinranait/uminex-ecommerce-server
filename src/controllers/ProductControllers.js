@@ -335,39 +335,6 @@ const getCategoryWishProduct = async (req, res) => {
     }
 }
 
-// const product = [
-//     {
-//         _id : 1,
-//         name : "product name",
-//         brand: "brand",
-//         colors : [
-//             {
-//                 name: 'red',
-//                 value: '123'
-//             },
-//             {
-//                 name: 'blue',
-//                 value: '234'
-//             },
-//         ]
-//     },
-//     {
-//         _id : 2,
-//         name : "product tow",
-//         brand: "brands",
-//         colors : [
-//             {
-//                 name: 'white',
-//                 value: '123'
-//             },
-//             {
-//                 name: 'red',
-//                 value: '234'
-//             },
-//         ]
-//     },
-// ]
-
 
 
 module.exports = {
