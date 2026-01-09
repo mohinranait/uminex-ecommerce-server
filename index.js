@@ -30,7 +30,7 @@ connectMongoDb()
 // Middleware
 app.use(
     cors({
-        origin: ['http://localhost:5173','https://uminex-mern-app.web.app'],
+        origin: ['http://localhost:5173','https://uminex-mern-app.web.app','https://uminex-ecommerce-client.vercel.app'],
         credentials: true,
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
     })
