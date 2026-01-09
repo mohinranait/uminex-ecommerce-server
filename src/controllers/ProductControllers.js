@@ -270,8 +270,12 @@ const getCategoryWishProduct = async (req, res) => {
         // Find the brand based on the provided brand slug
         const brand = brandSlug ? await Brand.findOne({ slug: brandSlug }) : null;
 
+        const formateColor = colorSlug?.split('_')
+
         // Find the color based on the provided color slug
-        const color = colorSlug ? await Color.findOne({ slug: colorSlug }) : null;
+        // const color = colorSlug ? await Color.findOne({ slug: colorSlug }) : null;
+        
+
 
         // Search by product name
         const search = req.query?.search || '';
@@ -306,15 +310,16 @@ const getCategoryWishProduct = async (req, res) => {
         if(brand){
             query.brand = brand?._id;
         }
-        if(color){
-            query['colors.slug']  = color?.slug
+        if(colorSlug && colorSlug !== 'null'){
+            // console.log('colors ',formateColor);
+            query['colors.slug']  = { $in : formateColor }
         }
 
         if(delivery ==='free'){
             query['delivery.deliveryStatus']  = delivery
         }
         
-        
+        // console.log(query);
         // Find products based on the constructed query
         const products = await Product.find(query)
         .skip((page-1)*limit)
